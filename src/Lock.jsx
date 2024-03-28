@@ -4,7 +4,7 @@ export function Lock({setLock, lock}) {
 
     function changeLock() {
         setLock(prevLock => !prevLock)
-        console.log(lock)
+        
     }
     return (
         <div>

@@ -19,11 +19,11 @@ export default function App() {
     localStorage.setItem("ITEMS", JSON.stringify(todos))
   }, [todos])
 
-  function addTodo(title, description) {
+  function addTodo(title) {
     setTodos(currentTodos => {
       return [
           ...currentTodos,
-          {id: crypto.randomUUID(), title, completed: false, description},
+          {id: crypto.randomUUID(), title, completed: false, nestedTodos: [{id: crypto.randomUUID(), nestedTitle: "hi", completed: false}, {id: crypto.randomUUID(), nestedTitle: "john", completed: true}]},
       ]
     })
   }
