@@ -15,19 +15,41 @@ export default function App() {
     return JSON.parse(localValue)
   })
 
+  const [nestedTodos, setNestedTodos] = useState(() => {
+    const localValue = localStorage.getItem("NESTEDITEMS")
+    if (localValue == null) return []
+    
+    return JSON.parse(localValue)
+  })
+
   useEffect(() => {
     localStorage.setItem("ITEMS", JSON.stringify(todos))
   }, [todos])
 
+  useEffect(() => {
+    localStorage.setItem("NESTEDITEMS", JSON.stringify(nestedTodos))
+  }, [nestedTodos])
+
   function addTodo(title) {
+    const parentId = crypto.randomUUID();
     setTodos(currentTodos => {
       return [
           ...currentTodos,
-          {id: crypto.randomUUID(), title, completed: false, nestedTodos: [{id: crypto.randomUUID(), nestedTitle: "hi", completed: false}, {id: crypto.randomUUID(), nestedTitle: "john", completed: true}]},
+          {id: parentId, title, completed: false, nestedTodos: [{id: crypto.randomUUID(), nestedTitle: "hi", completed: false, parentId: parentId}, {id: crypto.randomUUID(), nestedTitle: "john", completed: false, parentId: parentId}]},
       ]
     })
   }
 
+  // how to acess the parent todo so it knows which one to add it to?
+  function addNestedTodo(parentTodoId, nestedTitle) {
+    if (parentTodoId === todos.id)
+    setNestedTodos(currentNestedTodos => {
+      return [
+        ...currentNestedTodos,
+        {id: crypto.randomUUID(), nestedTitle, completed: false, parentId: parentTodoId}
+      ]
+    })
+  }
   function toggleTodo(id, completed) {
     setTodos(currentTodos => {
       return currentTodos.map(todo => {
@@ -64,7 +86,7 @@ export default function App() {
     <Lock setLock={setLock} lock={lock}/>
     <NewTodoForm onSubmit={addTodo}/>
     <h1>Todo List</h1>
-    <TodoList todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo}/>
+    <TodoList todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo} addNestedTodo={addNestedTodo} nestedTodos={nestedTodos}/>
     </>
   )
 }

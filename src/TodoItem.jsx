@@ -1,11 +1,23 @@
 /* eslint-disable react/prop-types */
+import { useState } from "react"
 
+export function TodoItem({completed, id, title, toggleTodo, deleteTodo, nestedTodos, addNestedTodo}) {
 
-export function TodoItem({completed, id, title, toggleTodo, deleteTodo, nestedTodos}) {
+    const [newNestedItem, setNewNestedItem] = useState("")
+  
+    function handleSubmit(e) {
+      e.preventDefault()
+      if (newNestedItem === "") return
+  
+      addNestedTodo(newNestedItem)
+  
+      setNewNestedItem("")
+    }
     return <li>
         <label>
             <input type="checkbox" onChange={e => toggleTodo(id, e.target.checked)} checked={completed}></input>
             {title}
+            {id}
         </label>
         <button onClick={() => deleteTodo(id, completed)}>Delete</button>
         
@@ -21,7 +33,16 @@ export function TodoItem({completed, id, title, toggleTodo, deleteTodo, nestedTo
                                     checked={completed} 
                                 />
                                 {nestedTodo.nestedTitle}
+                                {nestedTodo.parentId}
                             </label>
+                            <form onSubmit={handleSubmit}>
+                                <div>
+                                    <label htmlFor="item">New Nested Item</label>
+                                    <input value={newNestedItem} type="text" onChange={e => setNewNestedItem(e.target.value)}></input>
+                                </div>
+                                <button>add</button>
+                                </form>
+                            
                             <button onClick={() => deleteTodo(id, completed)}>Delete</button>
                         </li>
                     ))}
