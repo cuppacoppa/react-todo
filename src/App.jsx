@@ -35,20 +35,37 @@ export default function App() {
     setTodos(currentTodos => {
       return [
           ...currentTodos,
-          {id: parentId, title, completed: false, nestedTodos: [{id: crypto.randomUUID(), nestedTitle: "hi", completed: false, parentId: parentId}, {id: crypto.randomUUID(), nestedTitle: "john", completed: false, parentId: parentId}]},
+          {id: parentId, title, completed: false, 
+            nestedTodos: [
+              {id: crypto.randomUUID(), nestedTitle: "hi", completed: false, parentId: parentId}, 
+              {id: crypto.randomUUID(), nestedTitle: "john", completed: false, parentId: parentId}
+          ]},
       ]
     })
   }
 
-  // how to acess the parent todo so it knows which one to add it to?
+  // TODO MAKE THIS RECOGNIZE PARENT TODO AND THEN ADD NESTEDTODOS TO THAT PARENT TODOS ARRAY
   function addNestedTodo(parentTodoId, nestedTitle) {
-    if (parentTodoId === todos.id)
-    setNestedTodos(currentNestedTodos => {
-      return [
-        ...currentNestedTodos,
-        {id: crypto.randomUUID(), nestedTitle, completed: false, parentId: parentTodoId}
-      ]
-    })
+    // Find the parent todo in the todos array
+    const updatedTodos = todos.map(todo => {
+      console.log(todo.id)
+      // need to pass an actual parentId, this one is undefined because of eventHandler function has no arguments
+      if (todo.id === parentTodoId) {
+        // If found, create a new todo object with the updated nestedTodos array
+        console.log(todo.id)
+        return {
+          ...todo,
+          nestedTodos: [
+            ...todo.nestedTodos,
+            { id: crypto.randomUUID(), nestedTitle, completed: false }
+          ]
+        };
+      }
+      return todo; // Return the todo unchanged if it's not the parentTodo
+    });
+  
+    // Update the state with the modified todos array
+    setTodos(updatedTodos);
   }
   function toggleTodo(id, completed) {
     setTodos(currentTodos => {

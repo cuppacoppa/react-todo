@@ -8,8 +8,8 @@ export function TodoItem({completed, id, title, toggleTodo, deleteTodo, nestedTo
     function handleSubmit(e) {
       e.preventDefault()
       if (newNestedItem === "") return
-  
-      addNestedTodo(newNestedItem)
+        // need to pass an actual parentId, this one is undefined
+      addNestedTodo(nestedTodos.parentId, newNestedItem)
   
       setNewNestedItem("")
     }
